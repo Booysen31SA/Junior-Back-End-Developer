@@ -67,3 +67,23 @@ ALTER TABLE `reddit_api`.`postcomment`
 CHANGE COLUMN `idpostvote` `idpostcomment` VARCHAR(45) NOT NULL ,
 CHANGE COLUMN `iduservote` `idusercomment` VARCHAR(45) NOT NULL ;
 
+CREATE TABLE `reddit_api`.`postcommentvote` (
+  `uuid` VARCHAR(45) NOT NULL,
+  `commentuuid` VARCHAR(45) NOT NULL,
+  `useruuid` VARCHAR(45) NOT NULL,
+  `vote` BOOLEAN NOT NULL,
+  PRIMARY KEY (`uuid`, `commentuuid`, `useruuid`),
+  INDEX `useruuid_idx` (`useruuid` ASC) VISIBLE,
+  INDEX `commentuuid_idx` (`commentuuid` ASC) VISIBLE,
+  CONSTRAINT `useruuid`
+    FOREIGN KEY (`useruuid`)
+    REFERENCES `reddit_api`.`users` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `commentuuid`
+    FOREIGN KEY (`commentuuid`)
+    REFERENCES `reddit_api`.`postcomment` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+

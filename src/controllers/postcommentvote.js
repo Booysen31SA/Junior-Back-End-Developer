@@ -1,34 +1,33 @@
 const boom = require('@hapi/boom');
-const { DATETIME } = require('mysql/lib/protocol/constants/types');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
-
-    async createAPostVote(request, reply) {
+    async createCommentVote(request, reply) {
         const db = await request.server.app.db;
         const payload = request.payload;
         var vote = 1;
-        
+        const uuid = uuidv4();
+
         //check if user exist
         const userExist = await getUserbyUuid(payload.useruuid, db);
         if (userExist.length == 0) {
             return boom.conflict('User dont exist');
         }
 
-        // check if post exist
-        const postExist = await getPostbyUuid(payload.postuuid, db);
-        if (postExist.length == 0) {
-            return boom.conflict('Post dont exist');
+        // check if comment exist
+        const commentExist = await getCommentbyUuid(payload.commentuuid, db);
+        if (commentExist.length == 0) {
+            return boom.conflict('Comment dont exist');
         }
-
-        // check if vote already exist
-        const voteExist = await getCommentVotebyUuid(payload.useruuid, payload.postuuid, db);
 
         vote = payload.vote == true ? 1 : 0;
 
-        //if vote dont exist create a new vote
-        if (voteExist.length == 0) {
-            var sql = "INSERT INTO postvote (idpostvote, iduservote, vote) VALUES ('" + payload.postuuid + "', '" + payload.useruuid + "', '" + vote + "')";
+        // check if post comment vote exist
+        const commentVoteExist = await getCommentVotebyUuid(payload.useruuid, payload.commentuuid, db);
+
+        //if vote dont exist create a new comment vote
+        if (commentVoteExist.length == 0) {
+            var sql = "INSERT INTO postcommentvote (uuid, commentuuid, useruuid, vote) VALUES ('" + uuid + "', '" + payload.commentuuid + "', '" + payload.useruuid + "', '" + vote + "')";
             const result = new Promise((resolve, reject) => {
                 db.query(sql, function (err, result) {
                     if (err) {
@@ -41,9 +40,9 @@ module.exports = {
             return result;
         }
 
-        //check if vote is the same then remove vote
-        if (voteExist[0].vote == vote) {
-            var sql = "DELETE FROM postvote WHERE idpostvote = '" + payload.postuuid + "' and iduservote = '" + payload.useruuid + "'";
+        //check if comment vote is the same then remove comment vote
+        if (commentVoteExist[0].vote == vote) {
+            var sql = "DELETE FROM postcommentvote WHERE commentuuid = '" + payload.commentuuid + "' and useruuid = '" + payload.useruuid + "'";
             const result = new Promise((resolve, reject) => {
                 db.query(sql, function (err, result) {
                     if (err) {
@@ -56,9 +55,9 @@ module.exports = {
             return result;
         }
 
-        //if vote not the same update vote
-        if (voteExist[0].vote != vote) {
-            var sql = "UPDATE postvote SET vote = '" + vote + "' WHERE idpostvote = '" + payload.postuuid + "' and iduservote = '" + payload.useruuid + "'";
+        //if comment vote not the same update comment vote
+        if(commentVoteExist[0].vote != vote){
+            var sql = "UPDATE postcommentvote SET vote = '" + vote + "' WHERE commentuuid = '" + payload.commentuuid + "' and useruuid = '" + payload.useruuid + "'";
             const result = new Promise((resolve, reject) => {
                 db.query(sql, function (err, result) {
                     if (err) {
@@ -70,29 +69,29 @@ module.exports = {
             });
             return result;
         }
-
 
     }
 }
 
-function getCommentVotebyUuid(useruuid, commentuuid, db){
-    const result = new Promise((resolve, reject) => {
-        db.query("SELECT * FROM commentvote WHERE idcommentvote = '" + commentuuid + "' and iduservote = '" + useruuid + "'", function (err, result) {
-            if (err) {
-                console.log(err);
-                reject(err);
-            }
-            return resolve(result);
+function getCommentVotebyUuid(useruuid, commentuuid, db) {
+    
+        const result = new Promise((resolve, reject) => {
+            db.query("SELECT * FROM postcommentvote WHERE useruuid = '" + useruuid + "' and commentuuid = '" + commentuuid + "'", function (err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                }
+                return resolve(result);
+            });
         });
-    });
-
-    return result;
+    
+        return result;
 }
 
-function getVotebyUuid(useruuid, postuuid, db){
+function getCommentbyUuid(commentuuid, db){
 
     const result = new Promise((resolve, reject) => {
-        db.query("SELECT * FROM postvote WHERE idpostvote = '" + postuuid + "' and iduservote = '" + useruuid + "'", function (err, result) {
+        db.query("SELECT * FROM postcomment WHERE uuid = '" + commentuuid + "'", function (err, result) {
             if (err) {
                 console.log(err);
                 reject(err);
