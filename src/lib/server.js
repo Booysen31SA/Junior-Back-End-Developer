@@ -6,6 +6,7 @@ const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
 const Plugins = require('../plugins');
 const database  = require('../config/database');
+const { PORT, HOST } = require('../config/config');
 
 const swaggerOptions = {
     info: {
@@ -36,8 +37,8 @@ exports.init = async () => {
 exports.start = async () => {
     try {
         const server = Hapi.server({
-            port: process.env.PORT,
-            host: process.env.HOST
+            port: PORT,
+            host: HOST
         });
 
         server.app.db = await database.db;

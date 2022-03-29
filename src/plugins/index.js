@@ -2,4 +2,4 @@
 
 const { HomePlugin } = require('./home');
 
-module.exports = { HomePlugin };
+module.exports = [ HomePlugin ];
