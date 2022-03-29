@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 exports.db = (() => {
-    return db = mysql.createConnection({
+    var db = mysql.createConnection({
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
         database: process.env.DB_NAME,
@@ -14,5 +14,16 @@ exports.db = (() => {
     }
     //, {scripts: path.resolve(__dirname, '../db')}
     );
+
+    db.connect(function(err){
+        if(err){
+            console.log(err);
+            throw err;
+        }
+
+        console.log('Connected to mySQL database');
+    });
+
+    return db;
 
 })();
