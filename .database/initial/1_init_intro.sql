@@ -10,3 +10,23 @@ CREATE TABLE `reddit_api`.`users` (
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
+
+CREATE TABLE `post` (
+  `uuid` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `title` varchar(45) NOT NULL,
+  `content` varchar(250) NOT NULL,
+  `createddate` datetime DEFAULT NULL,
+  `updateddate` datetime DEFAULT NULL,
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `uuid_UNIQUE` (`uuid`)
+
+CREATE TABLE `reddit_api`.`postvote` (
+  `postuuid` VARCHAR(45) NOT NULL,
+  `vote` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`postuuid`),
+  CONSTRAINT `postuuid`
+    FOREIGN KEY (`postuuid`)
+    REFERENCES `reddit_api`.`post` (`uuid`)
+   );
+
