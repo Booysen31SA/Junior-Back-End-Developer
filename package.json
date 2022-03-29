@@ -1,0 +1,21 @@
+{
+  "name": "reddit-api",
+  "version": "1.0.0",
+  "description": "junior-backend-assessment",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Booysen",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "@hapi/lab": "^22.0.4",
+    "@hapi/boom": "^9.0.0",
+    "@hapi/joi": "^17.1.0",
+    "hapi-swagger": "^12.1.0",
+    "massive": "^6.6.0",
+    "uuid": "^3.3.2"
+  }
+}
