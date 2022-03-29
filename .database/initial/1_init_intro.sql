@@ -22,11 +22,43 @@ CREATE TABLE `post` (
   UNIQUE KEY `uuid_UNIQUE` (`uuid`)
 
 CREATE TABLE `reddit_api`.`postvote` (
-  `postuuid` VARCHAR(45) NOT NULL,
-  `vote` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`postuuid`),
+  `idpostvote` VARCHAR(45) NOT NULL,
+  `iduservote` VARCHAR(45) NOT NULL,
+  `vote` BOOLEAN NOT NULL,
+  PRIMARY KEY (`idpostvote`, `iduservote`),
+  INDEX `useruuid_idx` (`iduservote` ASC) VISIBLE,
   CONSTRAINT `postuuid`
-    FOREIGN KEY (`postuuid`)
+    FOREIGN KEY (`idpostvote`)
     REFERENCES `reddit_api`.`post` (`uuid`)
-   );
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `useruuid`
+    FOREIGN KEY (`iduservote`)
+    REFERENCES `reddit_api`.`users` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+  CREATE TABLE `reddit_api`.`postcomment` (
+  `idpostvote` VARCHAR(45) NOT NULL,
+  `iduservote` VARCHAR(45) NOT NULL,
+  `postcomment` VARCHAR(250) NOT NULL,
+  PRIMARY KEY (`idpostvote`, `iduservote`),
+  INDEX `useruuid_idx` (`iduservote` ASC) VISIBLE,
+  CONSTRAINT `postuserid`
+    FOREIGN KEY (`idpostvote`)
+    REFERENCES `reddit_api`.`post` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `useruuid`
+    FOREIGN KEY (`iduservote`)
+    REFERENCES `reddit_api`.`users` (`uuid`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `reddit_api`.`postcomment` 
+ADD COLUMN `uuid` VARCHAR(45) NOT NULL AFTER `postcomment`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`idpostvote`, `iduservote`, `uuid`),
+ADD UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE;
+;
 
