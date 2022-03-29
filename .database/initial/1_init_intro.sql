@@ -62,3 +62,8 @@ ADD PRIMARY KEY (`idpostvote`, `iduservote`, `uuid`),
 ADD UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE;
 ;
 
+
+ALTER TABLE `reddit_api`.`postcomment` 
+CHANGE COLUMN `idpostvote` `idpostcomment` VARCHAR(45) NOT NULL ,
+CHANGE COLUMN `iduservote` `idusercomment` VARCHAR(45) NOT NULL ;
+
