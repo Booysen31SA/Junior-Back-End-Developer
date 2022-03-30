@@ -11,7 +11,7 @@ CREATE TABLE `reddit_api`.`users` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
 ENGINE = InnoDB;
 
-CREATE TABLE `post` (
+CREATE TABLE  `reddit_api`.`post` (
   `uuid` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
   `title` varchar(45) NOT NULL,
@@ -20,6 +20,7 @@ CREATE TABLE `post` (
   `updateddate` datetime DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE KEY `uuid_UNIQUE` (`uuid`)
+  )ENGINE = InnoDB;
 
 CREATE TABLE `reddit_api`.`postvote` (
   `idpostvote` VARCHAR(45) NOT NULL,
