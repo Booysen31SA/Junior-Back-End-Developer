@@ -22,7 +22,7 @@ module.exports = {
         }
 
         // check if vote already exist
-        const voteExist = await getCommentVotebyUuid(payload.useruuid, payload.postuuid, db);
+        const voteExist = await getVotebyUuid(payload.useruuid, payload.postuuid, db);
 
         vote = payload.vote == true ? 1 : 0;
 
@@ -75,7 +75,7 @@ module.exports = {
     }
 }
 
-function getCommentVotebyUuid(useruuid, commentuuid, db){
+function getVotebyUuid(useruuid, commentuuid, db){
     const result = new Promise((resolve, reject) => {
         db.query("SELECT * FROM commentvote WHERE idcommentvote = '" + commentuuid + "' and iduservote = '" + useruuid + "'", function (err, result) {
             if (err) {
