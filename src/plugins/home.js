@@ -3,20 +3,21 @@ const Joi = require('@hapi/joi');
 const homeController = require('../controllers/home');
 
 exports.HomePlugin = {
+
     name: 'Home',
     version: '1.0.0',
-    register: async (server, options) => {
-        server.route([
-            {
-                path: '/',
-                method: 'GET',
+    register: async function (server, options){
+        
+        server.route({
+            path: '/',
+            method: 'GET',
+            options: {
                 handler: homeController.healthcheck,
-                options: {
-                    description: 'Healthcheck',
-                    notes: 'Returns a simple message',
-                    tags: ['api']
-                }
+                description: 'API health check to see if working',
+                notes: 'health check',
+                tags: ['api']
             }
-        ]);
+        });
+        
     }
 }
