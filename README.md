@@ -17,3 +17,12 @@ if database connects then success if not it will throw an error
 
 # View documentation
 http://127.0.0.1:3008/documentation#
+
+## heroku
+
+1) heroku login
+
+# deploy the app
+
+2) heroku create (url : https://lit-mountain-55370.herokuapp.com/ )
+3) git push heroku main
